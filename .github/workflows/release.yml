@@ -31,3 +31,60 @@ jobs:
         files: "dist/*"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  standalone:
+    environment: deploy
+    permissions:
+      id-token: write
+      contents: write
+    runs-on: windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: setup python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11
+    - name: build
+      shell: bash
+      run: |
+        python -m pip install --upgrade wheel setuptools build pyinstaller pillow
+        python -m pip install -r requirements.txt
+        python -m build
+        pyinstaller --onefile --distpath=ahkserver --name "ahk-server" -i .\snakelogo.png .\ahk_server\__main__.py
+    - name: Azure login
+      uses: azure/login@v1
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: sign build
+      uses: azure/trusted-signing-action@v0.3.18
+      with:
+        endpoint: ${{ secrets.SIGNING_ENDPOINT }}
+        trusted-signing-account-name: ${{ secrets.CODE_SIGNING_ACCOUNT_NAME }}
+        certificate-profile-name: ${{ secrets.CERTIFICATE_PROFILE_NAME }}
+        files-folder: ahkserver
+        files-folder-filter: exe
+        files-folder-recurse: false
+        exclude-environment-credential: true
+        exclude-workload-identity-credential: true
+        exclude-managed-identity-credential: true
+        exclude-shared-token-cache-credential: true
+        exclude-visual-studio-credential: true
+        exclude-visual-studio-code-credential: true
+        exclude-azure-cli-credential: false
+        exclude-azure-powershell-credential: true
+        exclude-azure-developer-cli-credential: true
+        exclude-interactive-browser-credential: true
+        file-digest: SHA256
+        timestamp-rfc3161: http://timestamp.acs.microsoft.com
+        timestamp-digest: SHA256
+
+    - name: Release GitHub
+      uses: softprops/action-gh-release@v1
+      with:
+        files: "ahkserver/*"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

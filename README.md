@@ -17,10 +17,21 @@ Requires you have AutoHotkey installed. See [ahk readme](https://github.com/spyo
 To start the server:
 
 ```bash
+python -m ahk_server
+```
+This accepts two optional command line parameters: `--host` and `--port`. Alternatively, you can also configure the host 
+and port by setting the environment variables `AHK_SERVER_HOST` and `AHK_SERVER_PORT`.
+
+Alternatively still, you can also invoke the server using `uvicorn`
+```bash
 uvicorn ahk_server.app:app
 ```
 
-For the client project, see: [ahk-client](https://github.com/spyoungtech/ahk-client).
+## Standalone release
+
+`ahk-server` is also available in a standalone exe release which can be found in the [releases page](https://github.com/spyoungtech/ahk-server/releases)
+
+For connecting to the server, see the client project: [ahk-client](https://github.com/spyoungtech/ahk-client).
 
 
 ## Status
