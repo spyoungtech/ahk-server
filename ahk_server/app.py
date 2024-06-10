@@ -1,16 +1,18 @@
 from io import BytesIO
-from typing import Optional, Any
-from ahk.exceptions import AHKProtocolError
-from fastapi import FastAPI, Request, Response
+from typing import Any
+from typing import Optional
+
 from ahk import AsyncAHK
 from ahk._async.transport import AsyncDaemonProcessTransport
+from ahk.exceptions import AHKProtocolError
 from ahk.message import RequestMessage
+from fastapi import FastAPI
+from fastapi import Request
+from fastapi import Response
 
 
 class BytesTransport(AsyncDaemonProcessTransport):
-    async def send(
-        self, request: RequestMessage, engine: Optional[AsyncAHK[Any]] = None
-    ) -> bytes:
+    async def send(self, request: RequestMessage, engine: Optional[AsyncAHK[Any]] = None) -> bytes:
         msg = request.format()
         assert self._proc is not None
         async with self.lock:
@@ -38,9 +40,11 @@ class BytesTransport(AsyncDaemonProcessTransport):
             content = content_buffer.getvalue()[:-1]
             return content
 
+
 app = FastAPI()
 
 ahk = AsyncAHK(TransportClass=BytesTransport)
+
 
 @app.post('/{method}')
 async def call_method(request: Request, method: str):

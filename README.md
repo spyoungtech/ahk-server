@@ -1,6 +1,6 @@
 # ahk-server
 
-A server to allow remote execution of AutoHotkey using the Python [ahk](https://github.com/spyoungtech/ahk) wrapper. 
+A server to allow remote execution of AutoHotkey using the Python [ahk](https://github.com/spyoungtech/ahk) wrapper.
 Uses fastapi.
 
 
@@ -19,7 +19,7 @@ To start the server:
 ```bash
 python -m ahk_server
 ```
-This accepts two optional command line parameters: `--host` and `--port`. Alternatively, you can also configure the host 
+This accepts two optional command line parameters: `--host` and `--port`. Alternatively, you can also configure the host
 and port by setting the environment variables `AHK_SERVER_HOST` and `AHK_SERVER_PORT`.
 
 Alternatively still, you can also invoke the server using `uvicorn`
@@ -36,7 +36,7 @@ For connecting to the server, see the client project: [ahk-client](https://githu
 
 ## Status
 
-This project (and its client counterpart) is usable, but in **very** early stages of development. 
+This project (and its client counterpart) is usable, but in **very** early stages of development.
 Notably, it does not currently include any authentication mechanisms for securing server connections, so use with caution.
 
 
