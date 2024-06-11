@@ -1,11 +1,12 @@
+import argparse
 import os
 import sys
 
-from ahk_server.app import app
 import uvicorn
-import argparse
 
-if __name__ == "__main__":
+from ahk_server.app import app
+
+if __name__ == '__main__':
     parser = argparse.ArgumentParser('ahk-server')
     parser.add_argument('--host')
     parser.add_argument('--port')
